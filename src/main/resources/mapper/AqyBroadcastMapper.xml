@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.executor.dao.AqyBroadcastDao">
+
+	<resultMap id="BaseResultMap"
+		type="com.xxl.job.executor.po.AqyBroadcast">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="href" property="href" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- <insert id="insertSelective" parameterType="com.xxl.job.executor.po.AqyBroadcast"> 
+		insert into aqy_broadcast <trim prefix="(" suffix=")" suffixOverrides=","> 
+		<if test="id != null"> id, </if> <if test="sort != null"> sort, </if> cTime 
+		</trim> <trim prefix="values (" suffix=")" suffixOverrides=","> <if test="id 
+		!= null"> #{id,jdbcType=VARCHAR}, </if> <if test="className != null"> #{sort,jdbcType=INTEGER}, 
+		</if> now() </trim> </insert> -->
+
+	<insert id="insertBatch"
+		parameterType="com.xxl.job.executor.po.AqyBroadcast">
+		insert into aqy_broadcast (id,href, sort, cTime)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.href}, #{item.sort},now())
+		</foreach>
+	</insert>
+	<select id="selectVideoString" resultType="java.lang.String">
+		select GROUP_CONCAT(DISTINCT a.id) as videoString from aqy_broadcast a
+	</select>
+
+</mapper>
